@@ -1,0 +1,4 @@
+interface:
+  display_name: "Tableau Dashboard Design"
+  short_description: "Consistent Tableau design and Cloud layout checks"
+  default_prompt: "Use $tableau-dashboard-design to apply my established Tableau visual style while preserving this project's data, filters, and navigation."

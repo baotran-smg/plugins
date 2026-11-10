@@ -1,0 +1,56 @@
+---
+name: tableau-workbook-engineering
+description: Create, edit, consolidate, or repair Tableau TWB workbooks and datasource connections while preserving Tableau XML compatibility and current user changes.
+---
+
+# Tableau Workbook Engineering
+
+Use this skill for direct `.twb` generation or XML edits.
+
+## Master Tableau project setup
+
+Apply these rules to every new Tableau dashboard project and when continuing an existing one.
+
+- Use `/Users/baotran/Documents/Working Projects/Tableau Dashboards` as the dashboard project parent. For a fresh project, create one clearly named child folder; for existing work, reuse its child folder. Do not create a second project folder for each request. Honor an explicitly different user destination.
+- Create and use these dedicated subfolders in the project folder: `SQL Query/` for SQL files; `Design/` for requirements, specifications, reference copies, previews and design exports; `Config/` for configuration, build scripts and validation reports; `Backup/` for previous dashboard versions. Do not store credentials in configuration files. Keep user-supplied reference originals in place unless asked to move them.
+- Keep the latest verified `.twb` or `.twbx` for each deliverable directly in the project folder. Update script destinations and relative links to match this structure.
+- Before any workbook edit or replacement, preserve a timestamped copy of the latest user-saved workbook in `Backup/` (for example, `<name>_YYYY-MM-DD_HH-mm-ss.twbx`); avoid overwriting an existing backup. Keep the current workbook in place while preparing and verifying its replacement. Preserve packaged dependencies needed to restore it.
+- After the replacement passes the required Tableau Desktop checks, place it at the canonical main-folder path and move superseded dashboard versions and backup copies into `Backup/`. Recheck for concurrent user edits before replacement. If validation fails, retain the last verified workbook in the main folder and clearly identify the unfinished candidate. Do not delete backup history or archive an ambiguous workbook without establishing which version is current.
+
+## Always grill the requirements
+
+Before building a fresh dashboard or implementing a changed requirement, critically examine the brief and available project evidence. Probe the audience and decision, success criteria, metric formulas and denominators, reporting grain and dates, data sources and access, filters and comparisons, edge cases and missing values, reference layout, deliverables, and acceptance checks. Challenge contradictions and unsupported assumptions instead of silently inventing requirements.
+
+Ask focused follow-up questions for unresolved decisions that materially affect correctness or design, using small rounds and continuing useful independent work while waiting. Reuse confirmed answers rather than asking again. Record the agreed requirements, assumptions, and open questions in `Design/` before implementation; resolve blocking questions before dependent work. For a small repair, grill only the affected scope. This requirements review does not replace the required design preview and user review unless the user explicitly skips it.
+
+## Source selection
+
+- For edits, locate and read the user's latest workbook immediately before changing it. Do not use a previously generated or backup copy as the source unless explicitly requested.
+- For a new workbook, prefer a minimal known-good workbook exported by the user's Tableau Desktop version.
+- Never modify the stakeholder workbook when the request calls for an isolated POC.
+
+## XML compatibility
+
+- Treat document-format manifest flags and their dependent elements as a pair.
+- `WindowsPersistSimpleIdentifiers` and every `simple-id` must be handled together.
+- For broad compatibility in a newly generated workbook, remove both the manifest flag and all `simple-id` elements. A workbook that declares the feature but omits IDs can fail with a missing-element error; an incompatible Tableau schema can reject IDs even when they are declared.
+- Preserve element ordering from a known-good workbook. Tableau validates more than ordinary XML well-formedness.
+- Treat the complete root and each nested element content model as part of the schema contract. For example, the 2026.3.0 workbook schema requires `<dashboards>` before `<windows>`; a worksheet `<table>` rejects a direct child `<title>`; and its `<dashboard>` element rejects the unverified `enable-sort-zone-taborder` attribute. Do not infer XML tags or attributes from another Tableau build.
+- Put dashboard titles in a verified dashboard text zone. Before writing, compare the target-build workbook's root ordering, worksheet table children, and dashboard attributes with a workbook authored by that same Desktop build.
+- Do not invent shelf or mark elements such as `angle`; copy the exact representation from a workbook created by the target Tableau version.
+- Every dashboard worksheet zone must reference a worksheet that has a complete visual representation.
+- Keep worksheet, dashboard, datasource, named-connection, and relation identifiers unique.
+- Preserve datasource child ordering: `connection`, `aliases`, columns/calculations, then layout/style/semantic metadata and `object-graph`.
+- Preserve worksheet view ordering: datasources and dependencies first, all filters before sort/perspective/shelf metadata, then slices and aggregation.
+
+## Verification
+
+1. Parse the final file as XML.
+2. Run `scripts/validate_twb.py --legacy-compatible <workbook>` for a newly generated broad-compatibility workbook.
+3. Confirm there are no duplicate datasource, worksheet, or dashboard names.
+4. Confirm all dashboard worksheet zones resolve to existing worksheets.
+5. Confirm datasource columns and worksheet filters satisfy Tableau's schema-sensitive ordering.
+6. Search for stale datasource and table names after replacement.
+7. For every `.twb` change, open the final file in the installed Tableau Desktop version and confirm that it loads and renders before calling it complete. If Desktop automation is unavailable, deliver a design specification and SQL rather than an unverified workbook.
+
+XML parsing proves only well-formedness. It does not replace opening the workbook in Tableau.
