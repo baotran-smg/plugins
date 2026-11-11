@@ -62,6 +62,20 @@ def main() -> int:
                     f"dashboard {dashboard.get('name')} references missing sheet {zone_name}"
                 )
 
+    # Datasource sorts cannot resolve worksheet-scoped field instances.
+    for datasource in root.findall("./datasources/datasource"):
+        instances = {node.get("name") for node in datasource.findall("column-instance")}
+        for sort in datasource.findall("./default-sorts/*"):
+            column = sort.get("column", "")
+            # Encoded instances, e.g. [none:product:nk], require a declaration
+            # in this datasource. Base-field sort syntax is left unchanged.
+            if column.startswith("[") and ":" in column and column not in instances:
+                errors.append(
+                    f"datasource {datasource.get('name')} default sort references "
+                    f"undefined datasource-level column-instance {column}; "
+                    "worksheet declarations do not establish datasource scope"
+                )
+
     datasource_boundaries = {
         "layout", "style", "semantic-values", "date-options", "default-date-format",
         "default-sorts", "field-sort-info", "datasource-dependencies", "filter", "object-graph",
