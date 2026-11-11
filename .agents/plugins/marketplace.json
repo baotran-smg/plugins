@@ -1,7 +1,7 @@
 {
-  "name": "personal-learning",
+  "name": "tableau-tools",
   "interface": {
-    "displayName": "Personal Learning Plugins"
+    "displayName": "Tableau Dashboard Tools"
   },
   "plugins": [
     {

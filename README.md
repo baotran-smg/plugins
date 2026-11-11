@@ -1,4 +1,4 @@
-# Personal Codex plugins
+# Tableau Dashboard Tools
 
 This repository distributes the Tableau Building plugin and its bundled Tableau skills.
 
@@ -13,7 +13,7 @@ This repository distributes the Tableau Building plugin and its bundled Tableau 
 2. Install the plugin:
 
    ```sh
-   codex plugin add tableau-building@personal-learning
+   codex plugin add tableau-building@tableau-tools
    ```
 
 3. Restart Codex and start a new chat to use the bundled skills.
