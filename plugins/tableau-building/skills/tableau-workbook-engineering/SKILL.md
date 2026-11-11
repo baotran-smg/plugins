@@ -7,26 +7,20 @@ description: Create, edit, consolidate, or repair Tableau TWB workbooks and data
 
 Use this skill for direct `.twb` generation or XML edits.
 
-## Master Tableau project setup
+Implement only the approved slice. Read its spec, ticket, design preview, and acceptance checks. Ask about new blockers, not settled decisions. Use `tableau-dashboard-planning` if the scope is still undefined, and `tableau-dashboard-design` if layout approval is still needed.
 
-Apply these rules to every new Tableau dashboard project and when continuing an existing one.
+## Project and workbook state
 
-- Use `/Users/baotran/Documents/Working Projects/Tableau Dashboards` as the dashboard project parent. For a fresh project, create one clearly named child folder; for existing work, reuse its child folder. Do not create a second project folder for each request. Honor an explicitly different user destination.
-- Create and use these dedicated subfolders in the project folder: `SQL Query/` for SQL files; `Design/` for requirements, specifications, reference copies, previews and design exports; `Config/` for configuration, build scripts and validation reports; `Backup/` for previous dashboard versions. Do not store credentials in configuration files. Keep user-supplied reference originals in place unless asked to move them.
-- Keep the latest verified `.twb` or `.twbx` for each deliverable directly in the project folder. Update script destinations and relative links to match this structure.
-- Before any workbook edit or replacement, preserve a timestamped copy of the latest user-saved workbook in `Backup/` (for example, `<name>_YYYY-MM-DD_HH-mm-ss.twbx`); avoid overwriting an existing backup. Keep the current workbook in place while preparing and verifying its replacement. Preserve packaged dependencies needed to restore it.
-- After the replacement passes the required Tableau Desktop checks, place it at the canonical main-folder path and move superseded dashboard versions and backup copies into `Backup/`. Recheck for concurrent user edits before replacement. If validation fails, retain the last verified workbook in the main folder and clearly identify the unfinished candidate. Do not delete backup history or archive an ambiguous workbook without establishing which version is current.
+Use the agreed project folder. For a new project, create `SQL Query/`, `Design/`, `Config/`, and `Backup/` inside it. Reuse existing folders without renaming them. Keep SQL in `SQL Query/`, design artifacts in `Design/`, scripts and reports in `Config/`, and prior workbooks in `Backup/`. Keep the latest verified workbook in the project folder. Do not store credentials in project files.
 
-## Always grill the requirements
+Before editing, back up the latest user-saved workbook with a unique timestamp. Keep it in place while preparing the candidate. Preserve packaged dependencies. Recheck for concurrent user edits before replacement. Replace the main workbook only after the required Desktop checks pass. Keep the last verified version if they fail. Do not delete backup history.
 
-Before building a fresh dashboard or implementing a changed requirement, critically examine the brief and available project evidence. Probe the audience and decision, success criteria, metric formulas and denominators, reporting grain and dates, data sources and access, filters and comparisons, edge cases and missing values, reference layout, deliverables, and acceptance checks. Challenge contradictions and unsupported assumptions instead of silently inventing requirements.
-
-Ask focused follow-up questions for unresolved decisions that materially affect correctness or design, using small rounds and continuing useful independent work while waiting. Reuse confirmed answers rather than asking again. Record the agreed requirements, assumptions, and open questions in `Design/` before implementation; resolve blocking questions before dependent work. For a small repair, grill only the affected scope. This requirements review does not replace the required design preview and user review unless the user explicitly skips it.
+For each ticket, change only its approved scope. Keep shared calculations and connections consistent across slices. Run its acceptance checks before starting the next slice. Reserve cross-tab filters, navigation, performance, and overall consistency for the integration ticket.
 
 ## Source selection
 
 - For edits, locate and read the user's latest workbook immediately before changing it. Do not use a previously generated or backup copy as the source unless explicitly requested.
-- For a new workbook, prefer a minimal known-good workbook exported by the user's Tableau Desktop version.
+- For a new workbook, use a Tableau Desktop-created, version-compatible starter. Do not hand-author a new `.twb` from scratch.
 - Never modify the stakeholder workbook when the request calls for an isolated POC.
 
 ## XML compatibility
@@ -54,7 +48,7 @@ Ask focused follow-up questions for unresolved decisions that materially affect 
 ## Verification
 
 1. Parse the final file as XML.
-2. Run `scripts/validate_twb.py --legacy-compatible <workbook>` for a newly generated broad-compatibility workbook.
+2. Run `scripts/validate_twb.py --legacy-compatible <workbook>` when broad compatibility is part of the approved work.
 3. Confirm there are no duplicate datasource, worksheet, or dashboard names.
 4. Confirm all dashboard worksheet zones resolve to existing worksheets.
 5. Confirm datasource columns and worksheet filters satisfy Tableau's schema-sensitive ordering.
@@ -62,3 +56,7 @@ Ask focused follow-up questions for unresolved decisions that materially affect 
 7. For every `.twb` change, open the final file in the installed Tableau Desktop version and confirm that it loads and renders before calling it complete. If Desktop automation is unavailable, deliver a design specification and SQL rather than an unverified workbook.
 
 XML parsing proves only well-formedness. It does not replace opening the workbook in Tableau.
+
+## Handoff
+
+After a verified slice or release, record the outcome, approved scope, workbook and SQL locations, metric and source definitions, checks performed, open issues, and next action. Link to the spec and ticket. Keep project-specific details in the handoff. Extract a reusable skill only after the pattern is validated for reuse. Do not claim Desktop or published verification without observing it.

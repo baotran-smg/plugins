@@ -18,4 +18,4 @@ This repository distributes the Tableau Building plugin and its bundled Tableau 
 
 3. Restart Codex and start a new chat to use the bundled skills.
 
-The plugin includes the Tableau Building orchestration skill, Tableau Dashboard Design, and Tableau Workbook Engineering. It does not bundle Tableau or BigQuery credentials/connectors; users need their own access to any data or applications they use.
+The plugin includes Tableau Building, Dashboard Planning, Dashboard Design, and Workbook Engineering. The workflow is in `plugins/tableau-building/skills/tableau-building/SKILL.md`: plan, design, implement, verify, and hand off. Each new dashboard project uses `SQL Query/`, `Design/`, `Config/`, and `Backup/` under its agreed project folder; existing folders keep their names. The plugin does not bundle Tableau or BigQuery credentials/connectors; users need their own access to any data or applications they use.

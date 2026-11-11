@@ -2,7 +2,7 @@
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "tableau-building",
   "version": "0.1.1",
-  "description": "Guide a Tableau dashboard from requirements and data checks through native build and verification.",
+  "description": "Plan, design, build, verify, and hand off Tableau dashboards with specialist skills.",
   "author": {
     "name": "Baotran"
   },
@@ -16,8 +16,8 @@
     "com.openai": {
       "interface": {
         "displayName": "Tableau Building",
-        "shortDescription": "Grill requirements, organize, build, and verify Tableau dashboards.",
-        "longDescription": "Grill dashboard requirements before implementation. Create or reuse a project under Tableau Dashboards with SQL Query, Design, Config, and Backup subfolders. Keep the latest verified workbook in the project main folder and timestamped previous versions in Backup. Use bundled design and workbook-engineering skills and verify final workbooks in Tableau Desktop.",
+        "shortDescription": "Plan, design, build, and verify Tableau dashboards.",
+        "longDescription": "Clarify requirements, write a spec and tickets, approve a Tableau-buildable preview, implement approved slices, verify the workbook in Tableau Desktop, and leave a project handoff. The plugin bundles planning, design, and workbook-engineering skills.",
         "developerName": "Baotran",
         "category": "Data Analytics",
         "capabilities": [
@@ -25,7 +25,7 @@
           "Write"
         ],
         "defaultPrompt": [
-          "Use Tableau Building to grill my dashboard requirements, create or reuse its Tableau Dashboards project folder with SQL Query, Design, Config, and Backup subfolders, and deliver a verified workbook in the project main folder with previous versions preserved in Backup."
+          "Use Tableau Building to plan this dashboard, approve its design, implement the agreed slices, verify the workbook in Tableau Desktop, and write a handoff."
         ]
       }
     }
